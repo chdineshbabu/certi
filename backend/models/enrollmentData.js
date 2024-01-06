@@ -23,6 +23,10 @@ const enrollSchema = new mongoose.Schema({
     enrollDate:{
         type:String,
         require:true
+    },
+    issueStatus:{
+        type:String,
+        require:true
     }
     
 })

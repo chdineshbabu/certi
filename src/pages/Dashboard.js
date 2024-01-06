@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import { useParams } from 'react-router-dom'
+import { useParams,useNavigate   } from 'react-router-dom'
 import axios from 'axios';
 
 function Dashboard() {
     const { id } = useParams();
     const [data, setData] = useState({})
+    const navigate = useNavigate();
 
     const [fetch, setFetch] = useState([])
     const [enrollbtn,setEnrollbtn] = useState("Enroll")
@@ -39,6 +40,11 @@ function Dashboard() {
         }
     }
 
+    async function viewCerti(courseId) {
+        const newUrl = `certi/${id}${courseId}`;
+        window.location.replace(newUrl);
+    }
+    
     async function fetchData() {
         try {
             await axios.post("http://localhost:8000/courseList", {
@@ -65,36 +71,20 @@ function Dashboard() {
                 <div className='flex'>
                     {fetch.map((item, index) => (
                         <div className='flex flex-col shadow-sm p-4 border-2 m-2 w-[20%]' key={index}>
-                            <h1 className='font-semibold'>Course Title:{item.title}</h1>
-                            <h1 className='font-semibold'>Description{item.dec}</h1>
-                            <h1 className='font-semibold'>Price:{item.price}$</h1>
-                            <h1 className='font-semibold'>Duration:{item.duration}</h1>
-                            <div>
-                            <button className='border-2 bg-slate-800 p-1 text-white '>View Course</button>
-                            <button className='border-2 bg-slate-800 p-1 text-white'>View Certificate</button>
-                            </div>
+                            <h1 className='font-semibold'>Course Title: {item.title}</h1>
+                            <h1 className='font-semibold'>Description: {item.dec}</h1>
+                            <h1 className='font-semibold'>Price: {item.price}$</h1>
+                            <h1 className='font-semibold'>Duration: {item.duration} hr</h1>
                             
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className='m-12'>
-                <h1 className='text-xl font-bold'>Course:</h1>
-                <div className='flex'>
-                    {fetch.map((item, index) => (
-                        <div className='flex flex-col shadow-sm p-4 border-2 m-2 w-[20%]' key={index}>
-                            <h1 className='font-semibold'>Course Title:{item.title}</h1>
-                            <h1 className='font-semibold'>Description{item.dec}</h1>
-                            <h1 className='font-semibold'>Price:{item.price}$</h1>
-                            <h1 className='font-semibold'>Duration:{item.courseId}</h1>
-                            
-                            <button className='border-2 bg-slate-800 p-1 text-white '>View course</button>
+                            <button className='border-2 bg-slate-800 p-1 text-white'onClick={()=>viewCerti(item.courseId)} >View Certificate</button>
                             <button className='border-2 bg-slate-800 p-1 text-white' onClick={()=>enroll(item.courseId,item.title)}>{enrollbtn}</button>
                              
                         </div>
                     ))}
                 </div>
+                <h1 className='text-xl font-bold'>Avalible courses</h1>
             </div>
+
             <div>
 
             </div>

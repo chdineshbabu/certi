@@ -4,7 +4,8 @@ const course = require("./models/courseModel")
 const cors = require("cors");
 var randomstring = require("randomstring");
 const enroll = require("./models/enrollmentData");
-const issue = require('./models/issueModel')
+const issue = require('./models/issueModel');
+const { storeString, getStringCount, getStringByIndex } = require('./contract');
 
 const app = express();
 
@@ -106,7 +107,7 @@ app.post("/courseList", async (req, res) => {
     console.log("Error at CourseList:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
+}); 
 
 app.post("/enroll", async (req, res) => {
   const { courseId, title, userId, userName } = req.body
@@ -120,7 +121,8 @@ app.post("/enroll", async (req, res) => {
     courseId: courseId,
     title: title,
     enrollId: enrollId,
-    enrollDate: Date()
+    enrollDate: Date(),
+    issueStatus: "false",
   }
 
   try {
@@ -156,10 +158,16 @@ app.post("/issue", async (req, res) => {
     enrollDate: enrollDate,
     enrollId: enrollId,
     issueId: issueId,
-    issueDate: Date()
+    issueDate: Date(),
+    verifiedStatus: "false",
+    transactionHash: "Null",
+    blockHash: "Null",
+    blockNumber: "Null",
+    from: "Null"
   }
   try {
     const issuing = await issue.insertMany([issueData])
+    await enroll.updateOne({enrollId: enrollId}, {$set:{issueStatus: "true"}}) 
     if (issuing) {
       res.json(issueId)
     } else {
@@ -184,7 +192,24 @@ app.post('/certi', async (req, res) => {
   }
 
 })
-
+app.post('/verifyCerti', async (req, res) => {
+  const { id } = req.body
+  const transactionResult = await storeString(id);
+  if (transactionResult) {
+    const { transactionHash, blockHash, blockNumber, from } = transactionResult;
+    try {
+      const verifyCerti = await issue.updateOne({ issueId: id }, {$set:{verifiedStatus: "true", transactionHash: transactionHash, blockHash: blockHash, blockNumber: blockNumber, from: from}})
+      
+      if(verifyCerti){
+        res.json(verifyCerti)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    console.log('Failed to store the string.');
+  }
+})
 app.listen(8000, () => {
   console.log("app is running on port 8000");
 });

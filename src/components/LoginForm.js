@@ -30,11 +30,11 @@ function LoginForm() {
   }
 
   return (
-    <div>
-      <form className='flex flex-col gap-3 p-4 ' action='POST'>
+    <div className='w-[27%]'>
+      <form className='flex  flex-col gap-3 p-4 ' action='POST'>
         <input className=' p-2 border-2' type='email' onChange={(e) => { setEmail(e.target.value) }} placeholder='Enter your Email' id='' />
         <input className='p-2 border-2' type='password' onChange={(e) => { setPassword(e.target.value) }} placeholder='Password' id='' />
-         <input type='submit' onClick={submit} />
+         <input className='bg-slate-700 hover:bg-slate-900 text-white p-2 border-gray-200' type='submit' onClick={submit} />
       </form>
     </div>
   )

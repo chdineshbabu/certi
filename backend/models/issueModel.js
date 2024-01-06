@@ -31,6 +31,26 @@ const issueSchema = new mongoose.Schema({
     enrollDate:{
         type:String,
         require:true
+    },
+    verifiedStatus:{
+        type:String,
+        require:true
+    },
+    transactionHash:{
+        type:String,
+        require:true
+    },
+    blockHash:{
+        type:String,
+        require:true
+    },
+    blockNumber:{
+        type:String,
+        require:true
+    },
+    from:{
+        type:String,
+        require:true
     }
     
 })
