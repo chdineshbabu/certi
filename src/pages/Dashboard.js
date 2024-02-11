@@ -34,6 +34,8 @@ function Dashboard() {
         try {
             await axios.post("http://localhost:8000/enroll", {
                 courseId,title,userId,userName
+            }).then(res=>{
+                alert("Enrolled")
             })
         } catch (error) {
             
